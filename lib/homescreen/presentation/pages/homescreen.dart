@@ -1,8 +1,11 @@
+import 'package:Expanses/core/colors.dart';
 import 'package:flutter/material.dart';
 
+import 'Home_tab.dart';
+import 'add_transaction_screen.dart';
 import 'report_tab.dart';
-import 'summary_tab.dart';
 import 'transactions_tab.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,9 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0; // Current tab index
 
   final List<Widget> _tabs = [
-    SummaryTab(),       // Summary Screen
-    TransactionsTab(),  // Transactions List Screen
-    ReportTab(),        // Report Screen
+    HomeTab(),       
+    TransactionsTab(),  
+    ReportTab(),        
   ];
 
   @override
@@ -23,15 +26,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Finance Tracker'),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.incomeColor, 
       ),
       body: _tabs[_currentIndex], 
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.incomeColor,
         child: Icon(Icons.add),
         onPressed: () {
-         
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => AddTransactionScreen()),
+          );
         },
         tooltip: 'Add Transaction',
       ),
@@ -43,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: AppColors.incomeColor, 
+        unselectedItemColor: AppColors.unselectedTabColor, 
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/colors.dart';
+import '../../../core/colors.dart';
 
 class SummaryCard extends StatelessWidget {
   final String title;
@@ -23,7 +23,7 @@ class SummaryCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      color: AppColors.cardBackground, // Use global card background color
+      color: AppColors.cardBackground, 
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(

@@ -12,15 +12,16 @@ class DBHelper {
     final path = join(await getDatabasesPath(), 'finance_tracker.db');
     _database = await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (db, version) {
         db.execute('''
           CREATE TABLE transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            type TEXT,
-            category TEXT,
-            amount REAL
-          )
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          type TEXT,
+          category TEXT,
+          amount REAL,
+          timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
         ''');
       },
     );
@@ -32,10 +33,14 @@ class DBHelper {
     return await db.insert('transactions', transaction);
   }
 
-  Future<List<Map<String, dynamic>>> fetchTransactions() async {
-    final db = await database;
-    return await db.query('transactions');
-  }
+ Future<List<Map<String, dynamic>>> fetchTransactions() async {
+  final db = await database;
+  return await db.query(
+    'transactions',
+    orderBy: 'timestamp DESC', // Order by timestamp in descending order
+  );
+}
+
 
   Future<void> clearTransactions() async {
     final db = await database;

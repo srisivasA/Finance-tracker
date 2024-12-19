@@ -13,10 +13,8 @@ class SummaryGrid extends StatelessWidget {
       child: GridView.builder(
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Two cards per row
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 1.3,
+          crossAxisCount: 2, 
+          
         ),
         itemCount: cards.length,
         itemBuilder: (context, index) {
