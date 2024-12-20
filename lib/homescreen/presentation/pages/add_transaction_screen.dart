@@ -1,10 +1,10 @@
 import 'package:Expanses/core/colors.dart';
+import 'package:Expanses/homescreen/presentation/provider/finance_tracker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/transaction.dart';
-import '../../domain/usecases/finance_tracker_provider.dart';
 import '../components/dropdown_field.dart';
 import '../components/tab_selector.dart';
 import '../components/text_field.dart';
@@ -179,4 +179,3 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 }
-

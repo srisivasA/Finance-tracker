@@ -1,9 +1,12 @@
-import 'package:Expanses/homescreen/presentation/components/Transactionlist.dart';
-import 'package:Expanses/homescreen/presentation/components/filter.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/provider/finance_tracker_provider.dart';
+import '../components/Transactionlist.dart';
+import '../components/filter.dart';
+import '../provider/finance_tracker_provider.dart';
+
+
 
 class TransactionsTab extends ConsumerStatefulWidget {
   @override
