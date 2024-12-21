@@ -1,4 +1,4 @@
-// transaction_entity.dart
+
 class TransactionEntity {
   final int? id;
   final String type;
