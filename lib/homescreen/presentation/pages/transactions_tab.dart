@@ -1,48 +1,44 @@
-import 'package:Expanses/homescreen/presentation/components/Transactionlist.dart';
-import 'package:Expanses/homescreen/presentation/components/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/provider/finance_tracker_provider.dart';
+import '../../../transactiontab/presentation/provider/filter_provider.dart';
+import '../components/Transactionlist.dart';
+import '../components/filter.dart';
+import '../provider/finance_tracker_provider.dart';
 
-class TransactionsTab extends ConsumerStatefulWidget {
+
+class TransactionsTab extends ConsumerWidget {
   @override
-  _TransactionsTabState createState() => _TransactionsTabState();
-}
-
-class _TransactionsTabState extends ConsumerState<TransactionsTab> {
-  String _filterType = 'All'; // Default filter type
-  String? _selectedSubcategory;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(financeTrackerProvider);
+    final filterState = ref.watch(filterStateProvider);
 
-    // Filter transactions based on type and subcategory
-    final filteredTransactions = _filterType == 'All'
-        ? viewModel.transactions
-        : viewModel.transactions.where((transaction) {
-            final isTypeMatch = transaction.type == _filterType;
-            final isSubcategoryMatch = _selectedSubcategory == null ||
-                transaction.category == _selectedSubcategory;
-            return isTypeMatch && isSubcategoryMatch;
-          }).toList();
+    // Filtering logic
+    final filteredTransactions = viewModel.transactions.where((transaction) {
+      // Show all transactions if "All" is selected
+      if (filterState.filterType == 'All') return true;
+
+      // Filter by type (Income/Expense)
+      final isTypeMatch = transaction.type == filterState.filterType;
+
+      // Filter by subcategory if one is selected
+      final isSubcategoryMatch = filterState.selectedSubcategory == null ||
+          transaction.category == filterState.selectedSubcategory;
+
+      // Return true only if both conditions match
+      return isTypeMatch && isSubcategoryMatch;
+    }).toList();
 
     return Column(
       children: [
         FilterComponent(
-          filterType: _filterType,
-          selectedSubcategory: _selectedSubcategory,
+          filterType: filterState.filterType,
+          selectedSubcategory: filterState.selectedSubcategory,
           onFilterTypeChanged: (type) {
-            setState(() {
-              _filterType = type;
-              _selectedSubcategory = null;
-            });
+            ref.read(filterStateProvider.notifier).setFilterType(type);
           },
           onSubcategoryChanged: (subcategory) {
-            setState(() {
-              _selectedSubcategory = subcategory;
-            });
+            ref.read(filterStateProvider.notifier).setSubcategory(subcategory);
           },
         ),
         Expanded(

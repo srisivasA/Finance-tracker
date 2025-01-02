@@ -12,7 +12,7 @@ class FirebaseAuthDataSource {
       phoneNumber: phoneNumber,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (PhoneAuthCredential credential) async {
-        // Automatically sign in
+       
         await _firebaseAuth.signInWithCredential(credential);
       },
       verificationFailed: (FirebaseAuthException e) {
@@ -22,7 +22,7 @@ class FirebaseAuthDataSource {
         completer.complete(verificationId);
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        // Handle timeout
+       
       },
     );
 

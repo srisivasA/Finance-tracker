@@ -8,7 +8,7 @@ class FilterComponent extends StatelessWidget {
   final Function(String?) onSubcategoryChanged;
 
   final Map<String, List<String>> subcategories = {
-    'All': [],
+    'All': [], // No subcategories for "All"
     'Income': ['Salary', 'Bonus', 'Investment'],
     'Expense': ['Rent', 'Groceries', 'Utilities', 'Food'],
   };
@@ -22,6 +22,9 @@ class FilterComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fetch the subcategories based on the selected filterType
+    final currentSubcategories = subcategories[filterType] ?? [];
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -37,7 +40,7 @@ class FilterComponent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: Column(
         children: [
-          // Main Filter Dropdown (Income/Expense)
+          // Main Filter Dropdown (All/Income/Expense)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -52,7 +55,7 @@ class FilterComponent extends StatelessWidget {
               DropdownButton<String>(
                 value: filterType,
                 dropdownColor: AppColors.cardBackground,
-                underline: SizedBox(),
+                underline: const SizedBox(),
                 icon: const Icon(Icons.arrow_drop_down, color: AppColors.textColor),
                 borderRadius: BorderRadius.circular(10),
                 onChanged: (String? newValue) {
@@ -74,7 +77,7 @@ class FilterComponent extends StatelessWidget {
               ),
             ],
           ),
-          // Subcategory Dropdown
+          // Subcategory Dropdown (only shown for Income or Expense)
           if (filterType != 'All')
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,9 +91,11 @@ class FilterComponent extends StatelessWidget {
                   ),
                 ),
                 DropdownButton<String>(
-                  value: selectedSubcategory,
+                  value: currentSubcategories.contains(selectedSubcategory)
+                      ? selectedSubcategory
+                      : null, // Ensure valid selection
                   dropdownColor: AppColors.cardBackground,
-                  underline: SizedBox(),
+                  underline: const SizedBox(),
                   hint: const Text(
                     'Select Subcategory',
                     style: TextStyle(color: AppColors.textColor),
@@ -100,7 +105,7 @@ class FilterComponent extends StatelessWidget {
                   onChanged: (String? newValue) {
                     onSubcategoryChanged(newValue);
                   },
-                  items: subcategories[filterType]!
+                  items: currentSubcategories
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
