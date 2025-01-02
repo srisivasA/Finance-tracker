@@ -22,7 +22,7 @@ class ProfileScreen extends ConsumerWidget {
         final savedImage =
             await File(pickedFile.path).copy('${directory.path}/$fileName');
 
-        // Update the profile image path using the provider.
+     
         ref.read(profileImageProvider.notifier).pickImage(savedImage.path);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +79,7 @@ class ProfileScreen extends ConsumerWidget {
               style: TextStyle(fontSize: 18.0),
             ),
             onTap: () {
-              // Navigate to the Transaction Report screen
+             
               Navigator.pushNamed(context, '/transaction-report');
             },
           ),

@@ -1,4 +1,4 @@
-import 'package:Expanses/core/colors.dart';
+import 'package:Expanses/core/utils/colors.dart';
 import 'package:Expanses/homescreen/presentation/provider/finance_tracker_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

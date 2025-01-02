@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Check SQLite for login state
+ 
   final dbHelper = DBHelper.instance;
   final loggedInUser = await dbHelper.getLoggedInUser();
 

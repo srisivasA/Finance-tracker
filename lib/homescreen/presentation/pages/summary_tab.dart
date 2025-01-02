@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/colors.dart';
+import '../../../core/utils/colors.dart';
 import '../components/summary_card.dart';
 import '../components/summary_grid.dart';
 

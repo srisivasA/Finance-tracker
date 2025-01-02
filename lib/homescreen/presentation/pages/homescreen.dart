@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:Expanses/core/colors.dart';
+import 'package:Expanses/core/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../profileScreen/presentation/profileScreen.dart';
 import '../../../profileScreen/provider/profile_provider.dart';
+import '../../../reportTab/presentation/report_tab.dart';
 import 'Home_tab.dart';
 import 'add_transaction_screen.dart';
-import 'report_tab.dart';
 import 'transactions_tab.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -17,17 +17,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _currentIndex = 0; // Current tab index
+  int _currentIndex = 0; 
 
   final List<Widget> _tabs = [
-    HomeTab(),       // Home tab screen
-    TransactionsTab(), // Transactions tab screen
-    ReportTab(),       // Report tab screen
+    HomeTab(),       
+    TransactionsTab(), 
+    ReportTab(),      
   ];
 
   @override
   Widget build(BuildContext context) {
-    // Watch the profile image path state from Riverpod provider.
+  
     final profileImagePath = ref.watch(profileImageProvider);
 
     return Scaffold(
@@ -39,7 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
-                // Navigate to ProfileScreen to update the profile image.
+               
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const ProfileScreen()),
@@ -50,7 +50,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         File(profileImagePath).existsSync()
                     ? FileImage(File(profileImagePath))
                     : const AssetImage('assets/images/profile.png') as ImageProvider,
-                radius: 20.0, // Adjusted size for the AppBar
+                radius: 20.0, 
                 child: profileImagePath == null
                     ? const Icon(Icons.person, size: 20, color: Colors.white)
                     : null,
@@ -59,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: _tabs[_currentIndex], // Display the current tab
+      body: _tabs[_currentIndex], 
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.incomeColor,

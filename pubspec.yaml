@@ -52,7 +52,10 @@ dependencies:
   path_provider: ^2.1.5
   image_picker: ^1.1.2
   permission_handler: ^10.3.0
+  device_info_plus: ^11.2.0
   pdf: ^3.10.0
+  pie_chart: ^5.4.0
+  fl_chart: ^0.69.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

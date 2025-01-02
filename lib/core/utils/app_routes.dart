@@ -22,6 +22,7 @@ Map<String, WidgetBuilder> appRoutes = {
   '/': (context) => LoginScreen(
         sendOtpUseCase: SendOtpUseCase(authRepository),
       ),
+      
       '/transaction-report': (context) => const TransactionReportScreen(),
  '/otp': (context) {
   final args = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
