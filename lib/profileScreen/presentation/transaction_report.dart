@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -64,51 +65,61 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
     return;
   }
 
-  final pdf = pw.Document();
-  pdf.addPage(
-    pw.Page(
-      build: (pw.Context context) {
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text('Transaction Report', style: pw.TextStyle(fontSize: 24)),
-            pw.SizedBox(height: 20),
-            pw.Table.fromTextArray(
-              headers: ['Type', 'Category', 'Amount', 'Timestamp'],
-              data: transactions.map((tx) {
-                return [
-                  tx['type'],
-                  tx['category'],
-                  tx['amount'].toString(),
-                  tx['timestamp']
-                ];
-              }).toList(),
-            ),
-          ],
-        );
-      },
-    ),
-  );
+  try {
+    // Create PDF document
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Transaction Report', style: pw.TextStyle(fontSize: 24)),
+              pw.SizedBox(height: 20),
+              pw.Table.fromTextArray(
+                headers: ['Type', 'Category', 'Amount', 'Timestamp'],
+                data: transactions.map((tx) {
+                  return [
+                    tx['type'],
+                    tx['category'],
+                    tx['amount'].toString(),
+                    tx['timestamp']
+                  ];
+                }).toList(),
+              ),
+            ],
+          );
+        },
+      ),
+    );
 
-  // Save the file to the Downloads directory
-  final directory = Directory('/storage/emulated/0/Download');
-  if (!directory.existsSync()) {
-    directory.createSync(recursive: true);
+
+    final directory = await getExternalStorageDirectory(); 
+    final downloadDir = Directory('${directory!.path}/Download');
+    if (!downloadDir.existsSync()) {
+      downloadDir.createSync(recursive: true);
+    }
+
+    // Save the file
+    final filePath = '${downloadDir.path}/TransactionReport.pdf';
+    final file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('PDF saved in Downloads: $filePath'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Failed to save PDF: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
-
-  final path = '${directory.path}/TransactionReport.pdf';
-  final file = File(path);
-
-  await file.writeAsBytes(await pdf.save());
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('PDF saved in Downloads: $path'),
-      backgroundColor: Colors.green,
-    ),
-  );
 }
-
 
 
   @override
@@ -117,37 +128,45 @@ class _TransactionReportScreenState extends State<TransactionReportScreen> {
       appBar: AppBar(
         title: const Text('Transaction Report'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: transactions.length,
-                    itemBuilder: (context, index) {
-                      final tx = transactions[index];
-                      return ListTile(
-                        title: Text('${tx['type']} - ${tx['category']}'),
-                        subtitle: Text('Amount: ₹${tx['amount']}'),
-                        trailing: Text(tx['timestamp']),
-                      );
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton.icon(
-                    onPressed: _generatePDF,
-                    icon: const Icon(Icons.download),
-                    label: const Text('Download as PDF'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                  ),
-                ),
-              ],
+     body: _isLoading
+    ? const Center(child: CircularProgressIndicator())
+    : transactions.isEmpty
+        ? const Center(
+            child: Text(
+              'No transactions available.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+          )
+        : Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    final tx = transactions[index];
+                    return ListTile(
+                      title: Text('${tx['type']} - ${tx['category']}'),
+                      subtitle: Text('Amount: ₹${tx['amount']}'),
+                      trailing: Text(tx['timestamp']),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton.icon(
+                  onPressed: _generatePDF,
+                  icon: const Icon(Icons.download),
+                  label: const Text('Download as PDF'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
     );
   }
 }
